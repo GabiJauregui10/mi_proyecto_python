@@ -3,6 +3,7 @@ from tkinter import ttk
 import json
 
 ARCHIVO = "insumos.json"
+indice_seleccionado = None
 
 def cargar_datos():
     try:
@@ -17,6 +18,13 @@ def guardar_datos(datos):
 
 def guardar_insumo():
 
+    global indice_seleccionado
+
+    # Validar cantidad
+    if entrada_cantidad.get() == "":
+        print("❌ Ingresá una cantidad")
+        return
+
     datos = cargar_datos()
 
     insumo = {
@@ -27,22 +35,41 @@ def guardar_insumo():
         "cantidad": int(entrada_cantidad.get())
     }
 
-    datos.append(insumo)
+    # EDITAR
+    if indice_seleccionado is not None:
+
+        datos[indice_seleccionado] = insumo
+
+        indice_seleccionado = None
+
+        print("✅ Insumo actualizado")
+
+    # NUEVO
+    else:
+
+        datos.append(insumo)
+
+        print("✅ Insumo agregado")
 
     guardar_datos(datos)
 
-    print("✅ Insumo guardado")
+    ver_insumos()
 
+    # Limpiar campos
+    entrada_nombre.delete(0, tk.END)
+    entrada_lote.delete(0, tk.END)
+    entrada_ingreso.delete(0, tk.END)
+    entrada_vencimiento.delete(0, tk.END)
+    entrada_cantidad.delete(0, tk.END)
 
 def ver_insumos():
 
     datos = cargar_datos()
 
-    # Limpiar tabla
-    for fila in tabla.get_children():
-        tabla.delete(fila)
+    # Limpiar TODAS las filas
+    tabla.delete(*tabla.get_children())
 
-    # Insertar datos
+    # Cargar nuevamente
     for i in datos:
 
         tabla.insert(
@@ -62,33 +89,57 @@ def eliminar_insumo():
     seleccion = tabla.selection()
 
     if not seleccion:
-        print("❌ No seleccionaste ningún insumo")
+        print("❌ Seleccioná un insumo")
         return
 
-    item = tabla.item(seleccion)
+    item_id = seleccion[0]
 
-    valores = item["values"]
-
-    nombre = valores[0]
-    lote = valores[1]
+    indice = tabla.index(item_id)
 
     datos = cargar_datos()
 
-    nuevos_datos = []
+    datos.pop(indice)
 
-    for i in datos:
+    guardar_datos(datos)
 
-        if not (
-            i["nombre"] == nombre and
-            i.get("lote", "Sin lote") == lote
-        ):
-            nuevos_datos.append(i)
-
-    guardar_datos(nuevos_datos)
+    ver_insumos()
 
     print("✅ Insumo eliminado")
 
-    ver_insumos()
+def cargar_para_editar():
+
+    global indice_seleccionado
+
+    seleccion = tabla.selection()
+
+    if not seleccion:
+        print("❌ Seleccioná un insumo")
+        return
+
+    item_id = seleccion[0]
+
+    indice_seleccionado = tabla.index(item_id)
+
+    datos = cargar_datos()
+
+    insumo = datos[indice_seleccionado]
+
+    entrada_nombre.delete(0, tk.END)
+    entrada_nombre.insert(0, insumo["nombre"])
+
+    entrada_lote.delete(0, tk.END)
+    entrada_lote.insert(0, insumo.get("lote", ""))
+
+    entrada_ingreso.delete(0, tk.END)
+    entrada_ingreso.insert(0, insumo["ingreso"])
+
+    entrada_vencimiento.delete(0, tk.END)
+    entrada_vencimiento.insert(0, insumo["vencimiento"])
+
+    entrada_cantidad.delete(0, tk.END)
+    entrada_cantidad.insert(0, insumo["cantidad"])
+
+    print("✏️ Insumo cargado")
 
 # ---------------- VENTANA ----------------
 
@@ -177,6 +228,16 @@ boton_eliminar = tk.Button(
 )
 
 boton_eliminar.pack(pady=10)
+
+boton_editar = tk.Button(
+    ventana,
+    text="Cargar para editar",
+    bg="orange",
+    fg="white",
+    command=cargar_para_editar
+)
+
+boton_editar.pack(pady=10)
 
 # ---------------- TABLA ----------------
 
