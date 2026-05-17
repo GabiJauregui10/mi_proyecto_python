@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import json
 
 ARCHIVO = "insumos.json"
@@ -31,6 +32,30 @@ def guardar_insumo():
     guardar_datos(datos)
 
     print("✅ Insumo guardado")
+
+
+def ver_insumos():
+
+    datos = cargar_datos()
+
+    # Limpiar tabla
+    for fila in tabla.get_children():
+        tabla.delete(fila)
+
+    # Insertar datos
+    for i in datos:
+
+        tabla.insert(
+            "",
+            tk.END,
+            values=(
+                i["nombre"],
+                i.get("lote", "Sin lote"),
+                i["ingreso"],
+                i["vencimiento"],
+                i["cantidad"]
+            )
+        )
 
 # ---------------- VENTANA ----------------
 
@@ -99,6 +124,46 @@ boton_guardar = tk.Button(
 )
 
 boton_guardar.pack(pady=20)
+
+boton_ver = tk.Button(
+    ventana,
+    text="Ver insumos",
+    bg="blue",
+    fg="white",
+    command=ver_insumos
+)
+
+boton_ver.pack(pady=10)
+
+# ---------------- TABLA ----------------
+
+tabla = ttk.Treeview(ventana)
+
+tabla["columns"] = (
+    "Nombre",
+    "Lote",
+    "Ingreso",
+    "Vencimiento",
+    "Cantidad"
+)
+
+tabla.column("#0", width=0, stretch=tk.NO)
+
+tabla.column("Nombre", width=120)
+tabla.column("Lote", width=100)
+tabla.column("Ingreso", width=100)
+tabla.column("Vencimiento", width=100)
+tabla.column("Cantidad", width=80)
+
+tabla.heading("#0", text="")
+
+tabla.heading("Nombre", text="Nombre")
+tabla.heading("Lote", text="Lote")
+tabla.heading("Ingreso", text="Ingreso")
+tabla.heading("Vencimiento", text="Vencimiento")
+tabla.heading("Cantidad", text="Cantidad")
+
+tabla.pack(pady=20)
 
 # ---------------- EJECUTAR ----------------
 

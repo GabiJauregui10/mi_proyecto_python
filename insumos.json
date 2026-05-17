@@ -24,5 +24,26 @@
         "ingreso": "2026-05-17",
         "vencimiento": "2027-05-17",
         "cantidad": 6
+    },
+    {
+        "nombre": "borax",
+        "lote": "28900",
+        "ingreso": "2026-05-17",
+        "vencimiento": "2027-05-17",
+        "cantidad": 4
+    },
+    {
+        "nombre": "almidon",
+        "lote": "20288",
+        "ingreso": "2026-05-17",
+        "vencimiento": "2027-05-18",
+        "cantidad": 5
+    },
+    {
+        "nombre": "almidon",
+        "lote": "20288",
+        "ingreso": "2026-05-17",
+        "vencimiento": "2027-05-18",
+        "cantidad": 5
     }
 ]
