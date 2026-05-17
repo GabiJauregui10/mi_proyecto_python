@@ -1,0 +1,21 @@
+[
+    {
+        "nombre": "tartarico",
+        "ingreso": "2026-05-17",
+        "vencimiento": "2026-05-23",
+        "cantidad": 5
+    },
+    {
+        "nombre": "almidon",
+        "ingreso": "2026-05-17",
+        "vencimiento": "2027-05-17",
+        "cantidad": 5
+    },
+    {
+        "nombre": "borax 2344454",
+        "lote": "34343",
+        "ingreso": "2026-05-20",
+        "vencimiento": "2027-06-20",
+        "cantidad": 3
+    }
+]
