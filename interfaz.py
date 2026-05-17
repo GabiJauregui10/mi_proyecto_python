@@ -57,6 +57,39 @@ def ver_insumos():
             )
         )
 
+def eliminar_insumo():
+
+    seleccion = tabla.selection()
+
+    if not seleccion:
+        print("❌ No seleccionaste ningún insumo")
+        return
+
+    item = tabla.item(seleccion)
+
+    valores = item["values"]
+
+    nombre = valores[0]
+    lote = valores[1]
+
+    datos = cargar_datos()
+
+    nuevos_datos = []
+
+    for i in datos:
+
+        if not (
+            i["nombre"] == nombre and
+            i.get("lote", "Sin lote") == lote
+        ):
+            nuevos_datos.append(i)
+
+    guardar_datos(nuevos_datos)
+
+    print("✅ Insumo eliminado")
+
+    ver_insumos()
+
 # ---------------- VENTANA ----------------
 
 ventana = tk.Tk()
@@ -134,6 +167,16 @@ boton_ver = tk.Button(
 )
 
 boton_ver.pack(pady=10)
+
+boton_eliminar = tk.Button(
+    ventana,
+    text="Eliminar insumo",
+    bg="red",
+    fg="white",
+    command=eliminar_insumo
+)
+
+boton_eliminar.pack(pady=10)
 
 # ---------------- TABLA ----------------
 

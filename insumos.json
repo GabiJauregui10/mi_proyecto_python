@@ -1,17 +1,5 @@
 [
     {
-        "nombre": "tartarico",
-        "ingreso": "2026-05-17",
-        "vencimiento": "2026-05-23",
-        "cantidad": 5
-    },
-    {
-        "nombre": "almidon",
-        "ingreso": "2026-05-17",
-        "vencimiento": "2027-05-17",
-        "cantidad": 5
-    },
-    {
         "nombre": "borax 2344454",
         "lote": "34343",
         "ingreso": "2026-05-20",
@@ -44,6 +32,13 @@
         "lote": "20288",
         "ingreso": "2026-05-17",
         "vencimiento": "2027-05-18",
+        "cantidad": 5
+    },
+    {
+        "nombre": "borax",
+        "lote": "20399",
+        "ingreso": "2027-05-29",
+        "vencimiento": "2028-05-29",
         "cantidad": 5
     }
 ]
