@@ -17,5 +17,12 @@
         "ingreso": "2026-05-20",
         "vencimiento": "2027-06-20",
         "cantidad": 3
+    },
+    {
+        "nombre": "borax",
+        "lote": "26003",
+        "ingreso": "2026-05-17",
+        "vencimiento": "2027-05-17",
+        "cantidad": 6
     }
 ]
