@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import json
+from datetime import datetime
 
 ARCHIVO = "insumos.json"
 indice_seleccionado = None
@@ -66,11 +67,28 @@ def ver_insumos():
 
     datos = cargar_datos()
 
-    # Limpiar TODAS las filas
     tabla.delete(*tabla.get_children())
 
-    # Cargar nuevamente
+    hoy = datetime.now()
+
     for i in datos:
+
+        fecha_venc = datetime.strptime(
+            i["vencimiento"],
+            "%Y-%m-%d"
+        )
+
+        dias = (fecha_venc - hoy).days
+
+        # Determinar color
+        if dias < 0:
+            color = "vencido"
+
+        elif dias <= 30:
+            color = "proximo"
+
+        else:
+            color = "normal"
 
         tabla.insert(
             "",
@@ -81,7 +99,8 @@ def ver_insumos():
                 i["ingreso"],
                 i["vencimiento"],
                 i["cantidad"]
-            )
+            ),
+            tags=(color,)
         )
 
 def eliminar_insumo():
@@ -268,6 +287,12 @@ tabla.heading("Vencimiento", text="Vencimiento")
 tabla.heading("Cantidad", text="Cantidad")
 
 tabla.pack(pady=20)
+
+# -------- COLORES --------
+
+tabla.tag_configure("vencido", background="red")
+tabla.tag_configure("proximo", background="yellow")
+tabla.tag_configure("normal", background="lightgreen")
 
 # ---------------- EJECUTAR ----------------
 
