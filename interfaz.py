@@ -1,5 +1,6 @@
+from openpyxl import Workbook
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import json
 from datetime import datetime
 
@@ -23,7 +24,7 @@ def guardar_insumo():
 
     # Validar cantidad
     if entrada_cantidad.get() == "":
-        print("❌ Ingresá una cantidad")
+        messagebox.showerror("Error", "Ingresá una cantidad")
         return
 
     datos = cargar_datos()
@@ -43,14 +44,20 @@ def guardar_insumo():
 
         indice_seleccionado = None
 
-        print("✅ Insumo actualizado")
+        messagebox.showinfo(
+    "Éxito",
+    "Insumo actualizado correctamente"
+)
 
     # NUEVO
     else:
 
         datos.append(insumo)
 
-        print("✅ Insumo agregado")
+        messagebox.showinfo(
+            "Éxito",
+            "Insumo agregado correctamente"
+        )
 
     guardar_datos(datos)
 
@@ -103,12 +110,95 @@ def ver_insumos():
             tags=(color,)
         )
 
+def buscar_insumos():
+
+    busqueda = entrada_buscar.get().lower()
+
+    datos = cargar_datos()
+
+    tabla.delete(*tabla.get_children())
+
+    hoy = datetime.now()
+
+    for i in datos:
+
+        nombre = i["nombre"].lower()
+        lote = i.get("lote", "").lower()
+
+        if busqueda in nombre or busqueda in lote:
+
+            fecha_venc = datetime.strptime(
+                i["vencimiento"],
+                "%Y-%m-%d"
+            )
+
+            dias = (fecha_venc - hoy).days
+
+            if dias < 0:
+                color = "vencido"
+
+            elif dias <= 30:
+                color = "proximo"
+
+            else:
+                color = "normal"
+
+            tabla.insert(
+                "",
+                tk.END,
+                values=(
+                    i["nombre"],
+                    i.get("lote", "Sin lote"),
+                    i["ingreso"],
+                    i["vencimiento"],
+                    i["cantidad"]
+                ),
+                tags=(color,)
+            )   
+
+def exportar_excel():
+
+    datos = cargar_datos()
+
+    libro = Workbook()
+
+    hoja = libro.active
+
+    hoja.title = "Insumos"
+
+    # Encabezados
+    hoja.append([
+        "Nombre",
+        "Lote",
+        "Ingreso",
+        "Vencimiento",
+        "Cantidad"
+    ])
+
+    # Datos
+    for i in datos:
+
+        hoja.append([
+            i["nombre"],
+            i.get("lote", "Sin lote"),
+            i["ingreso"],
+            i["vencimiento"],
+            i["cantidad"]
+        ])
+
+    libro.save("insumos.xlsx")
+
+    messagebox.showinfo(
+        "Éxito",
+        "Archivo Excel generado correctamente"
+    )
+
 def eliminar_insumo():
 
     seleccion = tabla.selection()
 
     if not seleccion:
-        print("❌ Seleccioná un insumo")
+        messagebox.showerror("Error", "Seleccioná un insumo")
         return
 
     item_id = seleccion[0]
@@ -123,7 +213,7 @@ def eliminar_insumo():
 
     ver_insumos()
 
-    print("✅ Insumo eliminado")
+    messagebox.showinfo("Éxito", "Insumo eliminado correctamente")
 
 def cargar_para_editar():
 
@@ -132,7 +222,10 @@ def cargar_para_editar():
     seleccion = tabla.selection()
 
     if not seleccion:
-        print("❌ Seleccioná un insumo")
+        messagebox.showwarning(
+    "Advertencia",
+    "Seleccioná un insumo"
+)
         return
 
     item_id = seleccion[0]
@@ -158,7 +251,8 @@ def cargar_para_editar():
     entrada_cantidad.delete(0, tk.END)
     entrada_cantidad.insert(0, insumo["cantidad"])
 
-    print("✏️ Insumo cargado")
+    messagebox.showinfo("Editar",
+    "Insumo cargado para edición")
 
 # ---------------- VENTANA ----------------
 
@@ -175,6 +269,18 @@ titulo = tk.Label(
 )
 
 titulo.pack(pady=20)
+
+# -------- BUSCADOR --------
+
+label_buscar = tk.Label(
+    ventana,
+    text="Buscar por nombre o lote"
+)
+
+label_buscar.pack()
+
+entrada_buscar = tk.Entry(ventana, width=40)
+entrada_buscar.pack(pady=5)
 
 # ---------------- NOMBRE ----------------
 
@@ -217,6 +323,15 @@ entrada_cantidad = tk.Entry(ventana, width=40)
 entrada_cantidad.pack(pady=5)
 
 # ---------------- BOTÓN ----------------
+boton_buscar = tk.Button(
+    ventana,
+    text="Buscar",
+    bg="purple",
+    fg="white",
+    command=buscar_insumos
+)
+
+boton_buscar.pack(pady=10)
 
 boton_guardar = tk.Button(
     ventana,
@@ -257,6 +372,16 @@ boton_editar = tk.Button(
 )
 
 boton_editar.pack(pady=10)
+
+boton_excel = tk.Button(
+    ventana,
+    text="Exportar a Excel",
+    bg="darkgreen",
+    fg="white",
+    command=exportar_excel
+)
+
+boton_excel.pack(pady=10)
 
 # ---------------- TABLA ----------------
 

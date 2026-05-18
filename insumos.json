@@ -19,5 +19,12 @@
         "ingreso": "2025-05-10",
         "vencimiento": "2026-05-16",
         "cantidad": 1
+    },
+    {
+        "nombre": "sulfurico",
+        "lote": "29000",
+        "ingreso": "2025-05-20",
+        "vencimiento": "2026-05-20",
+        "cantidad": 4
     }
 ]
