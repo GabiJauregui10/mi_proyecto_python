@@ -108,7 +108,10 @@ def ver_insumos():
                 i["cantidad"]
             ),
             tags=(color,)
+            
         )
+
+    actualizar_estadisticas()
 
 def buscar_insumos():
 
@@ -155,6 +158,108 @@ def buscar_insumos():
                 ),
                 tags=(color,)
             )   
+
+def actualizar_estadisticas():
+
+    datos = cargar_datos()
+
+    hoy = datetime.now()
+
+    total = len(datos)
+
+    vencidos = 0
+    proximos = 0
+    stock_bajo = 0
+
+    for i in datos:
+
+        fecha_venc = datetime.strptime(
+            i["vencimiento"],
+            "%Y-%m-%d"
+        )
+
+        dias = (fecha_venc - hoy).days
+
+        if dias < 0:
+            vencidos += 1
+
+        elif dias <= 30:
+            proximos += 1
+
+        if i["cantidad"] < 5:
+            stock_bajo += 1
+
+    label_total.config(
+        text=f"📦 Total: {total}"
+    )
+
+    label_vencidos.config(
+        text=f"🔴 Vencidos: {vencidos}"
+    )
+
+    label_proximos.config(
+        text=f"🟡 Próximos a vencer: {proximos}"
+    )
+
+    label_stock.config(
+        text=f"🚨 Stock bajo: {stock_bajo}"
+    )
+def mostrar_filtrados(tipo):
+
+    datos = cargar_datos()
+
+    tabla.delete(*tabla.get_children())
+
+    hoy = datetime.now()
+
+    for i in datos:
+
+        fecha_venc = datetime.strptime(
+            i["vencimiento"],
+            "%Y-%m-%d"
+        )
+
+        dias = (fecha_venc - hoy).days
+
+        # Color
+        if dias < 0:
+            color = "vencido"
+
+        elif dias <= 30:
+            color = "proximo"
+
+        else:
+            color = "normal"
+
+        mostrar = False
+
+        # FILTROS
+        if tipo == "todos":
+            mostrar = True
+
+        elif tipo == "vencidos" and dias < 0:
+            mostrar = True
+
+        elif tipo == "proximos" and dias <= 30 and dias >= 0:
+            mostrar = True
+
+        elif tipo == "stock" and i["cantidad"] < 5:
+            mostrar = True
+
+        if mostrar:
+
+            tabla.insert(
+                "",
+                tk.END,
+                values=(
+                    i["nombre"],
+                    i.get("lote", "Sin lote"),
+                    i["ingreso"],
+                    i["vencimiento"],
+                    i["cantidad"]
+                ),
+                tags=(color,)
+            )
 
 def exportar_excel():
 
@@ -282,6 +387,40 @@ label_buscar.pack()
 entrada_buscar = tk.Entry(ventana, width=40)
 entrada_buscar.pack(pady=5)
 
+# -------- ESTADÍSTICAS --------
+
+label_total = tk.Label(
+    ventana,
+    text="📦 Total: 0",
+    font=("Arial", 10, "bold")
+)
+
+label_total.pack()
+
+label_vencidos = tk.Label(
+    ventana,
+    text="🔴 Vencidos: 0",
+    font=("Arial", 10, "bold")
+)
+
+label_vencidos.pack()
+
+label_proximos = tk.Label(
+    ventana,
+    text="🟡 Próximos a vencer: 0",
+    font=("Arial", 10, "bold")
+)
+
+label_proximos.pack()
+
+label_stock = tk.Label(
+    ventana,
+    text="🚨 Stock bajo: 0",
+    font=("Arial", 10, "bold")
+)
+
+label_stock.pack(pady=10)
+
 # ---------------- NOMBRE ----------------
 
 label_nombre = tk.Label(ventana, text="Nombre del insumo")
@@ -383,6 +522,46 @@ boton_excel = tk.Button(
 
 boton_excel.pack(pady=10)
 
+# -------- FILTROS --------
+
+boton_todos = tk.Button(
+    ventana,
+    text="Todos",
+    command=lambda: mostrar_filtrados("todos")
+)
+
+boton_todos.pack(pady=2)
+
+boton_vencidos = tk.Button(
+    ventana,
+    text="Vencidos",
+    bg="red",
+    fg="white",
+    command=lambda: mostrar_filtrados("vencidos")
+)
+
+boton_vencidos.pack(pady=2)
+
+boton_proximos = tk.Button(
+    ventana,
+    text="Próximos",
+    bg="orange",
+    fg="white",
+    command=lambda: mostrar_filtrados("proximos")
+)
+
+boton_proximos.pack(pady=2)
+
+boton_stock = tk.Button(
+    ventana,
+    text="Stock bajo",
+    bg="purple",
+    fg="white",
+    command=lambda: mostrar_filtrados("stock")
+)
+
+boton_stock.pack(pady=2)
+
 # ---------------- TABLA ----------------
 
 tabla = ttk.Treeview(ventana)
@@ -420,5 +599,6 @@ tabla.tag_configure("proximo", background="yellow")
 tabla.tag_configure("normal", background="lightgreen")
 
 # ---------------- EJECUTAR ----------------
-
+ver_insumos()
 ventana.mainloop()
+
