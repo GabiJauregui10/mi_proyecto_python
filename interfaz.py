@@ -363,12 +363,37 @@ def cargar_para_editar():
 
 ventana = tk.Tk()
 ventana.title("Control de Insumos Químicos")
-ventana.geometry("500x500")
+ventana.geometry("1400x800")
+
+# -------- FRAMES PRINCIPALES --------
+
+frame_izquierdo = tk.Frame(
+    ventana,
+    padx=20,
+    pady=20
+)
+
+frame_izquierdo.pack(
+    side="left",
+    fill="y"
+)
+
+frame_derecho = tk.Frame(
+    ventana,
+    padx=20,
+    pady=20
+)
+
+frame_derecho.pack(
+    side="right",
+    fill="both",
+    expand=True
+)
 
 # ---------------- TÍTULO ----------------
 
 titulo = tk.Label(
-    ventana,
+    frame_derecho,
     text="Sistema de Control de Insumos",
     font=("Arial", 18)
 )
@@ -378,19 +403,19 @@ titulo.pack(pady=20)
 # -------- BUSCADOR --------
 
 label_buscar = tk.Label(
-    ventana,
+    frame_derecho,
     text="Buscar por nombre o lote"
 )
 
 label_buscar.pack()
 
-entrada_buscar = tk.Entry(ventana, width=40)
+entrada_buscar = tk.Entry(frame_derecho, width=40)
 entrada_buscar.pack(pady=5)
 
 # -------- ESTADÍSTICAS --------
 
 label_total = tk.Label(
-    ventana,
+    frame_derecho,
     text="📦 Total: 0",
     font=("Arial", 10, "bold")
 )
@@ -398,7 +423,7 @@ label_total = tk.Label(
 label_total.pack()
 
 label_vencidos = tk.Label(
-    ventana,
+    frame_derecho,
     text="🔴 Vencidos: 0",
     font=("Arial", 10, "bold")
 )
@@ -406,7 +431,7 @@ label_vencidos = tk.Label(
 label_vencidos.pack()
 
 label_proximos = tk.Label(
-    ventana,
+    frame_derecho,
     text="🟡 Próximos a vencer: 0",
     font=("Arial", 10, "bold")
 )
@@ -414,56 +439,101 @@ label_proximos = tk.Label(
 label_proximos.pack()
 
 label_stock = tk.Label(
-    ventana,
+    frame_derecho,
     text="🚨 Stock bajo: 0",
     font=("Arial", 10, "bold")
 )
 
 label_stock.pack(pady=10)
 
-# ---------------- NOMBRE ----------------
+# -------- FORMULARIO --------
 
-label_nombre = tk.Label(ventana, text="Nombre del insumo")
-label_nombre.pack()
+label_formulario = tk.Label(
+    frame_izquierdo,
+    text="Registrar / Editar Insumo",
+    font=("Arial", 16, "bold")
+)
 
-entrada_nombre = tk.Entry(ventana, width=40)
+label_formulario.pack(pady=10)
+
+# Nombre
+label_nombre = tk.Label(
+    frame_izquierdo,
+    text="Nombre del insumo"
+)
+
+label_nombre.pack(anchor="w")
+
+entrada_nombre = tk.Entry(
+    frame_izquierdo,
+    width=30
+)
+
 entrada_nombre.pack(pady=5)
 
-# ---------------- LOTE ----------------
+# Lote
+label_lote = tk.Label(
+    frame_izquierdo,
+    text="Número de lote"
+)
 
-label_lote = tk.Label(ventana, text="Número de lote")
-label_lote.pack()
+label_lote.pack(anchor="w")
 
-entrada_lote = tk.Entry(ventana, width=40)
+entrada_lote = tk.Entry(
+    frame_izquierdo,
+    width=30
+)
+
 entrada_lote.pack(pady=5)
 
-# ---------------- INGRESO ----------------
+# Ingreso
+label_ingreso = tk.Label(
+    frame_izquierdo,
+    text="Fecha ingreso (YYYY-MM-DD)"
+)
 
-label_ingreso = tk.Label(ventana, text="Fecha ingreso (YYYY-MM-DD)")
-label_ingreso.pack()
+label_ingreso.pack(anchor="w")
 
-entrada_ingreso = tk.Entry(ventana, width=40)
+entrada_ingreso = tk.Entry(
+    frame_izquierdo,
+    width=30
+)
+
 entrada_ingreso.pack(pady=5)
 
-# ---------------- VENCIMIENTO ----------------
+# Vencimiento
+label_vencimiento = tk.Label(
+    frame_izquierdo,
+    text="Fecha vencimiento (YYYY-MM-DD)"
+)
 
-label_vencimiento = tk.Label(ventana, text="Fecha vencimiento (YYYY-MM-DD)")
-label_vencimiento.pack()
+label_vencimiento.pack(anchor="w")
 
-entrada_vencimiento = tk.Entry(ventana, width=40)
+entrada_vencimiento = tk.Entry(
+    frame_izquierdo,
+    width=30
+)
+
 entrada_vencimiento.pack(pady=5)
 
-# ---------------- CANTIDAD ----------------
+# Cantidad
+label_cantidad = tk.Label(
+    frame_izquierdo,
+    text="Cantidad"
+)
 
-label_cantidad = tk.Label(ventana, text="Cantidad")
-label_cantidad.pack()
+label_cantidad.pack(anchor="w")
 
-entrada_cantidad = tk.Entry(ventana, width=40)
+entrada_cantidad = tk.Entry(
+    frame_izquierdo,
+    width=30
+)
+
 entrada_cantidad.pack(pady=5)
 
 # ---------------- BOTÓN ----------------
 boton_buscar = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Buscar",
     bg="purple",
     fg="white",
@@ -473,7 +543,7 @@ boton_buscar = tk.Button(
 boton_buscar.pack(pady=10)
 
 boton_guardar = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Guardar insumo",
     bg="green",
     fg="white",
@@ -483,7 +553,7 @@ boton_guardar = tk.Button(
 boton_guardar.pack(pady=20)
 
 boton_ver = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Ver insumos",
     bg="blue",
     fg="white",
@@ -493,7 +563,7 @@ boton_ver = tk.Button(
 boton_ver.pack(pady=10)
 
 boton_eliminar = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Eliminar insumo",
     bg="red",
     fg="white",
@@ -503,7 +573,7 @@ boton_eliminar = tk.Button(
 boton_eliminar.pack(pady=10)
 
 boton_editar = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Cargar para editar",
     bg="orange",
     fg="white",
@@ -513,7 +583,7 @@ boton_editar = tk.Button(
 boton_editar.pack(pady=10)
 
 boton_excel = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Exportar a Excel",
     bg="darkgreen",
     fg="white",
@@ -525,7 +595,7 @@ boton_excel.pack(pady=10)
 # -------- FILTROS --------
 
 boton_todos = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Todos",
     command=lambda: mostrar_filtrados("todos")
 )
@@ -533,7 +603,7 @@ boton_todos = tk.Button(
 boton_todos.pack(pady=2)
 
 boton_vencidos = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Vencidos",
     bg="red",
     fg="white",
@@ -543,7 +613,7 @@ boton_vencidos = tk.Button(
 boton_vencidos.pack(pady=2)
 
 boton_proximos = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Próximos",
     bg="orange",
     fg="white",
@@ -553,7 +623,7 @@ boton_proximos = tk.Button(
 boton_proximos.pack(pady=2)
 
 boton_stock = tk.Button(
-    ventana,
+    frame_izquierdo,
     text="Stock bajo",
     bg="purple",
     fg="white",
@@ -564,7 +634,7 @@ boton_stock.pack(pady=2)
 
 # ---------------- TABLA ----------------
 
-tabla = ttk.Treeview(ventana)
+tabla = ttk.Treeview(frame_derecho)
 
 tabla["columns"] = (
     "Nombre",
@@ -576,11 +646,11 @@ tabla["columns"] = (
 
 tabla.column("#0", width=0, stretch=tk.NO)
 
-tabla.column("Nombre", width=120)
-tabla.column("Lote", width=100)
-tabla.column("Ingreso", width=100)
-tabla.column("Vencimiento", width=100)
-tabla.column("Cantidad", width=80)
+tabla.column("Nombre", width=250)
+tabla.column("Lote", width=150)
+tabla.column("Ingreso", width=150)
+tabla.column("Vencimiento", width=150)
+tabla.column("Cantidad", width=100)
 
 tabla.heading("#0", text="")
 
@@ -590,7 +660,11 @@ tabla.heading("Ingreso", text="Ingreso")
 tabla.heading("Vencimiento", text="Vencimiento")
 tabla.heading("Cantidad", text="Cantidad")
 
-tabla.pack(pady=20)
+tabla.pack(
+    pady=20,
+    fill="both",
+    expand=True
+)
 
 # -------- COLORES --------
 
