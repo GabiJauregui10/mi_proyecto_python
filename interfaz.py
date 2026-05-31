@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import json
 from datetime import datetime
+from tkcalendar import DateEntry
 
 ARCHIVO = "insumos.json"
 indice_seleccionado = None
@@ -22,10 +23,82 @@ def guardar_insumo():
 
     global indice_seleccionado
 
-    # Validar cantidad
-    if entrada_cantidad.get() == "":
-        messagebox.showerror("Error", "Ingresá una cantidad")
+    # -------- VALIDACIONES --------
+
+    if (
+        entrada_nombre.get().strip() == "" or
+        entrada_lote.get().strip() == "" or
+        entrada_ingreso.get().strip() == "" or
+        entrada_vencimiento.get().strip() == "" or
+        entrada_cantidad.get().strip() == ""
+    ):
+
+        messagebox.showerror(
+            "Error",
+            "Todos los campos son obligatorios"
+        )
+
         return
+
+    # Cantidad numérica
+    try:
+
+        cantidad = int(
+            entrada_cantidad.get()
+        )
+
+    except ValueError:
+
+        messagebox.showerror(
+            "Error",
+            "La cantidad debe ser un número"
+        )
+
+        return
+
+    # Cantidad positiva
+    if cantidad < 0:
+
+        messagebox.showerror(
+            "Error",
+            "La cantidad no puede ser negativa"
+        )
+
+        return
+
+    # Validar fechas
+    try:
+
+        fecha_ingreso = datetime.strptime(
+            entrada_ingreso.get(),
+            "%Y-%m-%d"
+        )
+
+        fecha_vencimiento = datetime.strptime(
+            entrada_vencimiento.get(),
+            "%Y-%m-%d"
+        )
+
+    except ValueError:
+
+        messagebox.showerror(
+            "Error",
+            "Las fechas deben tener formato YYYY-MM-DD"
+        )
+
+        return
+
+    # Vencimiento posterior al ingreso
+    if fecha_vencimiento < fecha_ingreso:
+
+        messagebox.showerror(
+            "Error",
+            "La fecha de vencimiento no puede ser anterior a la fecha de ingreso"
+        )
+
+        return
+
+    # -------- GUARDAR DATOS --------
 
     datos = cargar_datos()
 
@@ -34,7 +107,7 @@ def guardar_insumo():
         "lote": entrada_lote.get(),
         "ingreso": entrada_ingreso.get(),
         "vencimiento": entrada_vencimiento.get(),
-        "cantidad": int(entrada_cantidad.get())
+        "cantidad": cantidad
     }
 
     # EDITAR
@@ -45,9 +118,9 @@ def guardar_insumo():
         indice_seleccionado = None
 
         messagebox.showinfo(
-    "Éxito",
-    "Insumo actualizado correctamente"
-)
+            "Éxito",
+            "Insumo actualizado correctamente"
+        )
 
     # NUEVO
     else:
@@ -411,6 +484,10 @@ label_buscar.pack()
 
 entrada_buscar = tk.Entry(frame_derecho, width=40)
 entrada_buscar.pack(pady=5)
+entrada_buscar.bind(
+    "<KeyRelease>",
+    lambda event: buscar_insumos()
+)
 
 # -------- ESTADÍSTICAS --------
 
@@ -494,9 +571,10 @@ label_ingreso = tk.Label(
 
 label_ingreso.pack(anchor="w")
 
-entrada_ingreso = tk.Entry(
+entrada_ingreso = DateEntry(
     frame_izquierdo,
-    width=30
+    width=27,
+    date_pattern="yyyy-mm-dd"
 )
 
 entrada_ingreso.pack(pady=5)
@@ -509,9 +587,10 @@ label_vencimiento = tk.Label(
 
 label_vencimiento.pack(anchor="w")
 
-entrada_vencimiento = tk.Entry(
+entrada_vencimiento = DateEntry(
     frame_izquierdo,
-    width=30
+    width=27,
+    date_pattern="yyyy-mm-dd"
 )
 
 entrada_vencimiento.pack(pady=5)

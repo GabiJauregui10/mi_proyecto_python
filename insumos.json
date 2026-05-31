@@ -26,5 +26,19 @@
         "ingreso": "2025-05-20",
         "vencimiento": "2026-05-20",
         "cantidad": 4
+    },
+    {
+        "nombre": "acido sulfurico",
+        "lote": "260099",
+        "ingreso": "2026-06-05",
+        "vencimiento": "2027-05-11",
+        "cantidad": 5
+    },
+    {
+        "nombre": "acido tartarico",
+        "lote": "260089",
+        "ingreso": "2026-06-05",
+        "vencimiento": "2027-05-03",
+        "cantidad": 5
     }
 ]
