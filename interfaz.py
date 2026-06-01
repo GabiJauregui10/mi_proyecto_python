@@ -4,6 +4,7 @@ from tkinter import ttk, messagebox
 import json
 from datetime import datetime
 from tkcalendar import DateEntry
+from database import obtener_insumos
 
 ARCHIVO = "insumos.json"
 indice_seleccionado = None
@@ -145,7 +146,7 @@ def guardar_insumo():
 
 def ver_insumos():
 
-    datos = cargar_datos()
+    datos = obtener_insumos()
 
     tabla.delete(*tabla.get_children())
 
@@ -154,9 +155,9 @@ def ver_insumos():
     for i in datos:
 
         fecha_venc = datetime.strptime(
-            i["vencimiento"],
-            "%Y-%m-%d"
-        )
+        i[4],
+        "%Y-%m-%d"
+    )
 
         dias = (fecha_venc - hoy).days
 
@@ -174,11 +175,11 @@ def ver_insumos():
             "",
             tk.END,
             values=(
-                i["nombre"],
-                i.get("lote", "Sin lote"),
-                i["ingreso"],
-                i["vencimiento"],
-                i["cantidad"]
+                i[1],
+                i[2],
+                i[3],
+                i[4],
+                i[5]
             ),
             tags=(color,)
             
@@ -223,11 +224,11 @@ def buscar_insumos():
                 "",
                 tk.END,
                 values=(
-                    i["nombre"],
-                    i.get("lote", "Sin lote"),
-                    i["ingreso"],
-                    i["vencimiento"],
-                    i["cantidad"]
+                    i[1],
+                    i[2],
+                    i[3],
+                    i[4],
+                    i[5]
                 ),
                 tags=(color,)
             )   

@@ -64,17 +64,70 @@ def obtener_insumos():
 
     cursor.execute("""
         SELECT
+            id,
             nombre,
             lote,
             ingreso,
             vencimiento,
             cantidad
         FROM insumos
-    """)
+        """)
 
     datos = cursor.fetchall()
 
     conexion.close()
 
     return datos
-    
+
+def eliminar_insumo_db(id_insumo):
+
+    conexion = sqlite3.connect("insumos.db")
+
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        "DELETE FROM insumos WHERE id = ?",
+        (id_insumo,)
+    )
+
+    conexion.commit()
+
+    conexion.close()    
+
+def actualizar_insumo_db(
+    id_insumo,
+    nombre,
+    lote,
+    ingreso,
+    vencimiento,
+    cantidad
+):
+
+    conexion = sqlite3.connect("insumos.db")
+
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        """
+        UPDATE insumos
+        SET
+            nombre = ?,
+            lote = ?,
+            ingreso = ?,
+            vencimiento = ?,
+            cantidad = ?
+        WHERE id = ?
+        """,
+        (
+            nombre,
+            lote,
+            ingreso,
+            vencimiento,
+            cantidad,
+            id_insumo
+        )
+    )
+
+    conexion.commit()
+
+    conexion.close() 
