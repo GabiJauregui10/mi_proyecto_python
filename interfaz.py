@@ -4,7 +4,7 @@ from tkinter import ttk, messagebox
 import json
 from datetime import datetime
 from tkcalendar import DateEntry
-from database import obtener_insumos
+from database import obtener_insumos, agregar_insumo
 
 ARCHIVO = "insumos.json"
 indice_seleccionado = None
@@ -100,8 +100,15 @@ def guardar_insumo():
         return
 
     # -------- GUARDAR DATOS --------
-
+    agregar_insumo(
+        entrada_nombre.get(),
+        entrada_lote.get(),
+        entrada_ingreso.get(),
+        entrada_vencimiento.get(),
+        cantidad
+)
     datos = cargar_datos()
+    
 
     insumo = {
         "nombre": entrada_nombre.get(),
@@ -110,6 +117,12 @@ def guardar_insumo():
         "vencimiento": entrada_vencimiento.get(),
         "cantidad": cantidad
     }
+    messagebox.showinfo(
+    "Éxito",
+    "Insumo agregado en SQLite"
+)
+
+    ver_insumos()
 
     # EDITAR
     if indice_seleccionado is not None:
@@ -191,7 +204,7 @@ def buscar_insumos():
 
     busqueda = entrada_buscar.get().lower()
 
-    datos = cargar_datos()
+    datos = obtener_insumos()
 
     tabla.delete(*tabla.get_children())
 
@@ -199,13 +212,13 @@ def buscar_insumos():
 
     for i in datos:
 
-        nombre = i["nombre"].lower()
-        lote = i.get("lote", "").lower()
+        nombre = str(i[1]).lower()
+        lote = str(i[2]).lower()
 
         if busqueda in nombre or busqueda in lote:
 
             fecha_venc = datetime.strptime(
-                i["vencimiento"],
+                i[4],
                 "%Y-%m-%d"
             )
 
@@ -231,11 +244,11 @@ def buscar_insumos():
                     i[5]
                 ),
                 tags=(color,)
-            )   
+            )  
 
 def actualizar_estadisticas():
 
-    datos = cargar_datos()
+    datos = obtener_insumos()
 
     hoy = datetime.now()
 
@@ -248,7 +261,7 @@ def actualizar_estadisticas():
     for i in datos:
 
         fecha_venc = datetime.strptime(
-            i["vencimiento"],
+            i[4],
             "%Y-%m-%d"
         )
 
@@ -260,7 +273,7 @@ def actualizar_estadisticas():
         elif dias <= 30:
             proximos += 1
 
-        if i["cantidad"] < 5:
+        if i[5] < 5:
             stock_bajo += 1
 
     label_total.config(

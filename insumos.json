@@ -40,5 +40,40 @@
         "ingreso": "2026-06-05",
         "vencimiento": "2027-05-03",
         "cantidad": 5
+    },
+    {
+        "nombre": "Metabisulfito",
+        "lote": "12345",
+        "ingreso": "2026-06-01",
+        "vencimiento": "2027-06-01",
+        "cantidad": 20
+    },
+    {
+        "nombre": "acido tartarico",
+        "lote": "260099",
+        "ingreso": "2026-05-31",
+        "vencimiento": "2027-05-31",
+        "cantidad": 20
+    },
+    {
+        "nombre": "acido tartarico",
+        "lote": "26009",
+        "ingreso": "2026-05-31",
+        "vencimiento": "2027-05-31",
+        "cantidad": 20
+    },
+    {
+        "nombre": "almidon",
+        "lote": "260089",
+        "ingreso": "2026-05-31",
+        "vencimiento": "2026-06-01",
+        "cantidad": 20
+    },
+    {
+        "nombre": "borax",
+        "lote": "260078",
+        "ingreso": "2025-05-31",
+        "vencimiento": "2026-05-01",
+        "cantidad": 2
     }
 ]
